@@ -58,6 +58,9 @@ dependencies:
   flutter_secure_storage: ^10.0.0-beta.4
   cached_network_image: ^3.4.1
 
+  image_picker: ^1.2.0
+  permission_handler: ^12.0.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
