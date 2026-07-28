@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "920296700438",
+    "project_id": "modern-high-school-2683e",
+    "storage_bucket": "modern-high-school-2683e.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:920296700438:android:0e641a11fca76edbccd337",
+        "android_client_info": {
+          "package_name": "com.example.modern_high_school"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCz-q-vW9Uu1-WEeJdjv9F-manyNqPOU-8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
