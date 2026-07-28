@@ -67,11 +67,73 @@ class _LoginPageState extends State<LoginPage> {
 
                 const SizedBox(height: 40),
 
-                // Email field yaha add hoga
+                CustomTextField(
+                  controller: emailController,
+                  hintText: "Email Address",
+                  prefixIcon: Icons.email_outlined,
+                  keyboardType: TextInputType.emailAddress,
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return "Email is required";
+                    }
 
-                // Password field yaha add hoga
+                    if (!value.contains("@")) {
+                      return "Enter a valid email";
+                    }
 
-                // Login button yaha add hoga
+                    return null;
+                  },
+                ),
+
+                const SizedBox(height: 20),
+
+                CustomTextField(
+                  controller: passwordController,
+                  hintText: "Password",
+                  prefixIcon: Icons.lock_outline,
+                  obscureText: obscurePassword,
+
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      obscurePassword
+                          ? Icons.visibility_off
+                          : Icons.visibility,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        obscurePassword = !obscurePassword;
+                      });
+                    },
+                  ),
+
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Password is required";
+                    }
+
+                    if (value.length < 6) {
+                      return "Minimum 6 characters";
+                    }
+
+                    return null;
+                  },
+                ),
+
+                const SizedBox(height: 30),
+
+                CustomButton(
+                  text: "Login",
+                  isLoading: isLoading,
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text("Validation Successful"),
+                        ),
+                      );
+                    }
+                  },
+                ),
 
               ],
             ),
