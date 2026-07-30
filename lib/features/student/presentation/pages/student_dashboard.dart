@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../../../auth/presentation/pages/login_page.dart';
 import 'package:modern_high_school/features/auth/data/models/user_model.dart';
 import '../../../auth/data/repositories/firestore_repository.dart';
-
+import '../widgets/student_bottom_nav.dart';
 import '../widgets/profile_card.dart';
 import '../widgets/dashboard_grid.dart';
 
@@ -19,6 +19,7 @@ class _StudentDashboardState extends State<StudentDashboard> {
 
   UserModel? user;
   bool isLoading = true;
+  int currentIndex = 0;
 
   @override
   void initState() {
@@ -64,6 +65,25 @@ class _StudentDashboardState extends State<StudentDashboard> {
           (route) => false,
     );
   }
+  void onTabChanged(int index) {
+    setState(() {
+      currentIndex = index;
+    });
+
+    switch (index) {
+      case 0:
+      // Home
+        break;
+
+      case 1:
+      // Notifications (Next phase)
+        break;
+
+      case 2:
+      // Profile (Next phase)
+        break;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -71,6 +91,7 @@ class _StudentDashboardState extends State<StudentDashboard> {
       return const Scaffold(
         body: Center(
           child: CircularProgressIndicator(),
+
         ),
       );
     }
@@ -125,6 +146,11 @@ class _StudentDashboardState extends State<StudentDashboard> {
 
           ],
         ),
+      ),
+
+      bottomNavigationBar: StudentBottomNav(
+        currentIndex: currentIndex,
+        onTap: onTabChanged,
       ),
     );
   }
