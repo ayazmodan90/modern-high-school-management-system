@@ -3,6 +3,10 @@ import 'package:flutter/material.dart';
 import '../widgets/custom_button.dart';
 import '../widgets/custom_text_field.dart';
 import 'login_page.dart';
+import '../../data/repositories/auth_repository.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import '../../data/repositories/firestore_repository.dart';
+import 'package:modern_high_school/features/auth/data/models/user_model.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -25,6 +29,8 @@ class _RegisterPageState extends State<RegisterPage> {
   bool hidePassword = true;
   bool hideConfirmPassword = true;
 
+  String selectedRole = "Student";
+
 
   @override
   void dispose() {
@@ -36,28 +42,72 @@ class _RegisterPageState extends State<RegisterPage> {
 
     super.dispose();
   }
+  final AuthRepository _authRepository = AuthRepository();
+  final FirestoreRepository _firestoreRepository = FirestoreRepository();
+
+  bool isLoading = false;
 
 
-  void registerUser(){
+  Future<void> registerUser() async {
+    if (!_formKey.currentState!.validate()) return;
 
-    if(_formKey.currentState!.validate()){
+    setState(() {
+      isLoading = true;
+    });
 
-      String name = nameController.text.trim();
-      String email = emailController.text.trim();
+    try {
+      UserCredential userCredential =
+      await _authRepository.registerUser(
+        email: emailController.text.trim(),
+        password: passwordController.text.trim(),
+      );
 
-      print("Name : $name");
-      print("Email : $email");
+      UserModel user = UserModel(
+        uid: userCredential.user!.uid,
+        fullName: nameController.text.trim(),
+        email: emailController.text.trim(),
+        phone: phoneController.text.trim(),
+        role: selectedRole,
+        profileImage: "",
+        isActive: true,
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+      );
+
+      await _firestoreRepository.saveUser(user);
+
+      // Yaha baad me Firestore me user save karenge
+
+      if (!mounted) return;
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text("Registration Successful"),
+          backgroundColor: Colors.green,
         ),
       );
 
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (_) => const LoginPage(),
+        ),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.toString()),
+          backgroundColor: Colors.red,
+        ),
+      );
+    } finally {
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
     }
-
   }
-
 
 
   @override
@@ -184,6 +234,52 @@ class _RegisterPageState extends State<RegisterPage> {
                 },
 
 
+              ),
+
+              const SizedBox(height: 15),
+
+              DropdownButtonFormField<String>(
+                initialValue: selectedRole,
+                decoration: InputDecoration(
+                  hintText: "Select Role",
+                  prefixIcon: const Icon(Icons.school_outlined),
+                  filled: true,
+                  fillColor: Colors.grey.shade100,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(14),
+                    borderSide: BorderSide.none,
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(14),
+                    borderSide: BorderSide.none,
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(14),
+                    borderSide: const BorderSide(
+                      color: Color(0xFF1565C0),
+                      width: 2,
+                    ),
+                  ),
+                ),
+                items: const [
+                  DropdownMenuItem(
+                    value: "Student",
+                    child: Text("Student"),
+                  ),
+                  DropdownMenuItem(
+                    value: "Teacher",
+                    child: Text("Teacher"),
+                  ),
+                  DropdownMenuItem(
+                    value: "Parent",
+                    child: Text("Parent"),
+                  ),
+                ],
+                onChanged: (value) {
+                  setState(() {
+                    selectedRole = value!;
+                  });
+                },
               ),
 
 
@@ -333,11 +429,9 @@ class _RegisterPageState extends State<RegisterPage> {
 
 
               CustomButton(
-
                 text: "Register",
-
+                isLoading: isLoading,
                 onPressed: registerUser,
-
               ),
 
 
