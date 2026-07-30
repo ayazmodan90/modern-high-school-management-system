@@ -1,8 +1,18 @@
 import 'package:flutter/material.dart';
-
-import '../widgets/custom_button.dart';
-import '../widgets/custom_text_field.dart';
 import 'register_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+import '../widgets/custom_text_field.dart';
+import '../widgets/custom_button.dart';
+
+import '../../data/repositories/auth_repository.dart';
+import '../../data/repositories/firestore_repository.dart';
+import 'package:modern_high_school/features/auth/data/models/user_model.dart';
+
+import 'package:modern_high_school/features/student/presentation/pages/student_dashboard.dart';
+import 'package:modern_high_school/features/teacher/presentation/pages/teacher_dashboard.dart';
+import 'package:modern_high_school/features/parent/presentation/pages/parent_dashboard.dart';
+import 'package:modern_high_school/features/admin/presentation/pages/admin_dashboard.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -16,6 +26,8 @@ class _LoginPageState extends State<LoginPage> {
 
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final AuthRepository _authRepository = AuthRepository();
+  final FirestoreRepository _firestoreRepository = FirestoreRepository();
 
   bool obscurePassword = true;
   bool isLoading = false;
@@ -25,6 +37,91 @@ class _LoginPageState extends State<LoginPage> {
     emailController.dispose();
     passwordController.dispose();
     super.dispose();
+  }
+
+  Future<void> loginUser() async {
+    if (!_formKey.currentState!.validate()) return;
+
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      UserCredential credential = await _authRepository.loginUser(
+        email: emailController.text.trim(),
+        password: passwordController.text.trim(),
+      );
+
+      UserModel? user =
+      await _firestoreRepository.getUser(credential.user!.uid);
+
+      if (user == null) {
+        throw Exception("User data not found.");
+      }
+
+      if (!mounted) return;
+
+      switch (user.role) {
+        case "Student":
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (_) => const StudentDashboard(),
+            ),
+          );
+          break;
+
+        case "Teacher":
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (_) => const TeacherDashboard(),
+            ),
+          );
+          break;
+
+        case "Parent":
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (_) => const ParentDashboard(),
+            ),
+          );
+          break;
+
+        case "Admin":
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (_) => const AdminDashboard(),
+            ),
+          );
+          break;
+
+        default:
+          throw Exception("Invalid role");
+      }
+    } on FirebaseAuthException catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.message ?? "Login Failed"),
+          backgroundColor: Colors.red,
+        ),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.toString()),
+          backgroundColor: Colors.red,
+        ),
+      );
+    } finally {
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
+    }
   }
 
   @override
@@ -125,15 +222,7 @@ class _LoginPageState extends State<LoginPage> {
                 CustomButton(
                   text: "Login",
                   isLoading: isLoading,
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text("Validation Successful"),
-                        ),
-                      );
-                    }
-                  },
+                  onPressed: loginUser,
                 ),
 
                 const SizedBox(height: 20),

@@ -4,6 +4,9 @@ import '../widgets/custom_button.dart';
 import '../widgets/custom_text_field.dart';
 import 'login_page.dart';
 import '../../data/repositories/auth_repository.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import '../../data/repositories/firestore_repository.dart';
+import 'package:modern_high_school/features/auth/data/models/user_model.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -40,6 +43,7 @@ class _RegisterPageState extends State<RegisterPage> {
     super.dispose();
   }
   final AuthRepository _authRepository = AuthRepository();
+  final FirestoreRepository _firestoreRepository = FirestoreRepository();
 
   bool isLoading = false;
 
@@ -52,10 +56,27 @@ class _RegisterPageState extends State<RegisterPage> {
     });
 
     try {
+      UserCredential userCredential =
       await _authRepository.registerUser(
         email: emailController.text.trim(),
         password: passwordController.text.trim(),
       );
+
+      UserModel user = UserModel(
+        uid: userCredential.user!.uid,
+        fullName: nameController.text.trim(),
+        email: emailController.text.trim(),
+        phone: phoneController.text.trim(),
+        role: selectedRole,
+        profileImage: "",
+        isActive: true,
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+      );
+
+      await _firestoreRepository.saveUser(user);
+
+      // Yaha baad me Firestore me user save karenge
 
       if (!mounted) return;
 
@@ -218,7 +239,7 @@ class _RegisterPageState extends State<RegisterPage> {
               const SizedBox(height: 15),
 
               DropdownButtonFormField<String>(
-                value: selectedRole,
+                initialValue: selectedRole,
                 decoration: InputDecoration(
                   hintText: "Select Role",
                   prefixIcon: const Icon(Icons.school_outlined),
