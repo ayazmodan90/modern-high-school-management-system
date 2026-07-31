@@ -6,6 +6,8 @@ import '../pages/timetable_page.dart';
 import '../pages/results_page.dart';
 import '../pages/fees_page.dart';
 import '../pages/notifications_page.dart';
+import '../pages/settings_page.dart';
+import '../pages/settings_page.dart';
 
 class DashboardGrid extends StatelessWidget {
   const DashboardGrid({super.key});
@@ -100,6 +102,20 @@ class DashboardGrid extends StatelessWidget {
               context,
               MaterialPageRoute(
                 builder: (_) => const NotificationsPage(),
+              ),
+            );
+          },
+        ),
+
+        DashboardCard(
+          title: "Settings",
+          icon: Icons.settings,
+          color: Colors.blueGrey,
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => const SettingsPage(),
               ),
             );
           },
