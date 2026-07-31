@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dashboard_card.dart';
+import '../pages/attendance_page.dart';
+import '../pages/homework_page.dart';
+import '../pages/timetable_page.dart';
 
 class DashboardGrid extends StatelessWidget {
   const DashboardGrid({super.key});
@@ -19,14 +22,28 @@ class DashboardGrid extends StatelessWidget {
           title: "Attendance",
           icon: Icons.fact_check,
           color: Colors.green,
-          onTap: () {},
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => const AttendancePage(),
+              ),
+            );
+          },
         ),
 
         DashboardCard(
           title: "Homework",
           icon: Icons.menu_book,
-          color: Colors.orange,
-          onTap: () {},
+          color: Colors.deepPurple,
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => const HomeworkPage(),
+              ),
+            );
+          },
         ),
 
         DashboardCard(
@@ -38,9 +55,16 @@ class DashboardGrid extends StatelessWidget {
 
         DashboardCard(
           title: "Timetable",
-          icon: Icons.calendar_month,
-          color: Colors.purple,
-          onTap: () {},
+          icon: Icons.schedule,
+          color: Colors.indigo,
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => const TimetablePage(),
+              ),
+            );
+          },
         ),
 
       ],

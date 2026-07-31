@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class HomeworkEmptyWidget extends StatelessWidget {
-  const HomeworkEmptyWidget({super.key});
+class TimetableEmptyWidget extends StatelessWidget {
+  const TimetableEmptyWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +13,7 @@ class HomeworkEmptyWidget extends StatelessWidget {
           children: [
 
             Icon(
-              Icons.assignment_turned_in_outlined,
+              Icons.event_busy_outlined,
               size: 90,
               color: Colors.grey.shade400,
             ),
@@ -21,7 +21,7 @@ class HomeworkEmptyWidget extends StatelessWidget {
             const SizedBox(height: 20),
 
             const Text(
-              "No Homework Available",
+              "No Classes Scheduled",
               style: TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
@@ -31,11 +31,11 @@ class HomeworkEmptyWidget extends StatelessWidget {
             const SizedBox(height: 10),
 
             Text(
-              "Your teacher hasn't assigned any homework yet.",
+              "Enjoy your free day! There are no classes scheduled today.",
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: Colors.grey.shade600,
                 fontSize: 16,
+                color: Colors.grey.shade600,
               ),
             ),
           ],
