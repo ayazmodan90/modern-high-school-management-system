@@ -70,6 +70,17 @@ class _RegisterPageState extends State<RegisterPage> {
         role: selectedRole,
         profileImage: "",
         isActive: true,
+
+        // New Fields
+        studentClass: "",
+        section: "",
+        rollNo: "",
+        fatherName: "",
+        motherName: "",
+        address: "",
+        gender: "",
+        dob: "",
+
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
       );
