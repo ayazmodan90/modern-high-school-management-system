@@ -6,6 +6,8 @@ import '../../../auth/data/repositories/firestore_repository.dart';
 import '../widgets/student_bottom_nav.dart';
 import '../widgets/profile_card.dart';
 import '../widgets/dashboard_grid.dart';
+import '../pages/profile_page.dart';
+import '../pages/notifications_page.dart';
 
 class StudentDashboard extends StatefulWidget {
   const StudentDashboard({super.key});
@@ -72,15 +74,24 @@ class _StudentDashboardState extends State<StudentDashboard> {
 
     switch (index) {
       case 0:
-      // Home
         break;
 
       case 1:
-      // Notifications (Next phase)
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => const NotificationsPage(),
+          ),
+        );
         break;
 
       case 2:
-      // Profile (Next phase)
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => const ProfilePage(),
+          ),
+        );
         break;
     }
   }
