@@ -4,6 +4,7 @@ import '../pages/attendance_page.dart';
 import '../pages/homework_page.dart';
 import '../pages/timetable_page.dart';
 import '../pages/results_page.dart';
+import '../pages/fees_page.dart';
 
 class DashboardGrid extends StatelessWidget {
   const DashboardGrid({super.key});
@@ -70,6 +71,20 @@ class DashboardGrid extends StatelessWidget {
               context,
               MaterialPageRoute(
                 builder: (_) => const TimetablePage(),
+              ),
+            );
+          },
+        ),
+
+        DashboardCard(
+          title: "Fees",
+          icon: Icons.account_balance_wallet,
+          color: Colors.green,
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => const FeesPage(),
               ),
             );
           },
