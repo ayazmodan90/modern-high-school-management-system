@@ -3,6 +3,7 @@ import 'dashboard_card.dart';
 import '../pages/attendance_page.dart';
 import '../pages/homework_page.dart';
 import '../pages/timetable_page.dart';
+import '../pages/results_page.dart';
 
 class DashboardGrid extends StatelessWidget {
   const DashboardGrid({super.key});
@@ -48,9 +49,16 @@ class DashboardGrid extends StatelessWidget {
 
         DashboardCard(
           title: "Results",
-          icon: Icons.bar_chart,
-          color: Colors.blue,
-          onTap: () {},
+          icon: Icons.assessment,
+          color: Colors.teal,
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => const ResultsPage(),
+              ),
+            );
+          },
         ),
 
         DashboardCard(
